@@ -5,27 +5,30 @@
 int main(int argc, char **argv)
 {
     int ret = atoi(argv[1]);
-    char **dup_str;
+    char **sh;
+    uid_t real_user;
+    git_t group_user;
+    char *arg[2];
 
     if (423 == ret)
     {
-        dup_str = strdup(ret);
+        sh = strdup("/bin/sh");
 
         // get group user
-        int gid = getegid()
+        group_user = getegid()
         // get real user ID of calling process
-        geteuid
+        real_user = geteuid()
 
-        setresgid
+        // setresuid, setresgid - set real, effective and saved user or group ID 
+        setresgid(group_user, group_user, group_user);
+        setresuid(real_user, real_user, real_user);
 
-        setresuid
-
-        execve
-
-        fwrite
-
-        return
+        // execve() executes the program pointed to by filename.
+        execv(sh, NULL);
     }
-    // if not equal :
-
+    else
+    {
+        fwrite("No !\n", 1, 5, stderr);
+    }
+    return (0);
 }
