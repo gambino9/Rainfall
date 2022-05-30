@@ -1,27 +1,27 @@
 #include <stdio.h>
 #include <string.h>
 
-void p()
+void p(uint32_t arg)
 {
-    int ret_flush = fflush(file_stream) // flushes the output buffer of a stream
+    uint32_t ret;
     
-    gets()
+    fflush(file_stream) // flushes the output buffer of a stream (stdout here)
+    char *src;
+    
+    gets(&src)
 
-    if (2952790016 & EAX)
+    if (ret == 0x0b)
     {
-        printf()
-        -Exit(0)
+        printf("(%p)\n", ret) // print the pointer type data
+        _Exit(1)
     }
-    exit()
-
-    puts()
-    strdup()
-
-    return;
+    puts(&src)
+    strdup(&src)
+    return ;
 }
 
 int main(int argc, char ** argv)
 {
     p()
-    return 0;
+    return ;
 }

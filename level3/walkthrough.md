@@ -55,7 +55,7 @@ End of assembler dump.
 
 We can see tha the program expects the register `eax` to be equal to `0x40` in order to enter an if condition and open a shell.
 
-Right before that, a value if put in `eax`. This is where we need to write in order to enter the "if" condition : 
+Right before that, a value is put in `eax`. This is where we need to write in order to enter the "if" condition : 
 
 `    0x080484da <+54>:	mov    0x804988c,%eax`
 
