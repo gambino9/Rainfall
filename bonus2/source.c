@@ -157,3 +157,62 @@ void greetuser(int32_t arg_8h)
     puts(&s1);
     return;
 }
+
+
+/* jsdec pseudo code output */
+/* /home/lamia/bonus2 @ 0x8048484 */
+#include <stdint.h>
+ 
+int32_t greetuser (int32_t arg_8h) {
+    char * s1;
+    const char * s2;
+    eax = language;
+    if (eax != 1) {
+        if (eax != 2) {
+            if (eax != 0) {
+                goto label_0;
+            }
+            edx = "Hello ";
+            eax = &s1;
+            ecx = *(edx);
+            *(eax) = ecx;
+            ecx = *((edx + 4));
+            *((eax + 4)) = cx;
+            edx = *((edx + 6));
+            *((eax + 6)) = dl;
+            edx = "Hyv\xc3\xa4\xc3\xa4 p\xc3\xa4iv\xc3\xa4\xc3\xa4 ";
+            eax = &s1;
+            ecx = *(edx);
+            *(eax) = ecx;
+            ecx = *((edx + 4));
+            *((eax + 4)) = ecx;
+            ecx = *((edx + 8));
+            *((eax + 8)) = ecx;
+            ecx = *((edx + 0xc));
+            *((eax + 0xc)) = ecx;
+            ecx = *((edx + 0x10));
+            *((eax + 0x10)) = cx;
+            edx = *((edx + 0x12));
+            *((eax + 0x12)) = dl;
+        } else {
+        } else {
+            edx = "Goedemiddag! ";
+            eax = &s1;
+            ecx = *(edx);
+            *(eax) = ecx;
+            ecx = *((edx + 4));
+            *((eax + 4)) = ecx;
+            ecx = *((edx + 8));
+            *((eax + 8)) = ecx;
+            edx = *((edx + 0xc));
+            *((eax + 0xc)) = dx;
+        }
+    }
+label_0:
+    eax = &arg_8h;
+    eax = &s1;
+    strcat (eax, eax);
+    eax = &s1;
+    puts (eax);
+    return eax;
+}
