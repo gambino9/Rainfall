@@ -2,12 +2,11 @@
  
 void n(void)
 {
-    char *format;
+    char *buf;
     
-    fgets(&format, 0x200, _stdin);
-    printf(&format);
+    fgets(&buf, 512, _stdin);
+    printf(&buf);
     exit(1);
-    n(&stack0xfffffffc);
     return;
 }
 
