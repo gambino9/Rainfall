@@ -1,30 +1,23 @@
 void m(void)
 {
-    undefined4 uVar1;
-    
-    uVar1 = time(0);
-    printf("%s - %d\n", c, uVar1);
+    printf("%s - %d\n", pass, time(0));
     return;
 }
 
-undefined4 main(undefined4 placeholder_0, char **envp)
+int main(int argc,char **argv)
 {
     undefined4 *puVar1;
     undefined4 uVar2;
     undefined4 *puVar3;
     
-    puVar1 = (undefined4 *)malloc(8);
-    *puVar1 = 1;
-    uVar2 = malloc(8);
-    puVar1[1] = uVar2;
-    puVar3 = (undefined4 *)malloc(8);
-    *puVar3 = 2;
-    uVar2 = malloc(8);
-    puVar3[1] = uVar2;
-    strcpy(puVar1[1], envp[1]);
-    strcpy(puVar3[1], envp[2]);
-    uVar2 = fopen("/home/user/level8/.pass", 0x80486e9);
-    fgets(c, 0x44, uVar2);
-    puts(0x8048703);
+    str1 = (char *)malloc(8);
+    *str1 = 1;
+    str2 = (char *)malloc(8);
+    *str2 = 2;
+    strcpy(str1[1], argv[1]);
+    strcpy(str2[1], argv[2]);
+    file = fopen("/home/user/level8/.pass");
+    fgets(pass, 68, file);
+    puts("~~");
     return 0;
 }
