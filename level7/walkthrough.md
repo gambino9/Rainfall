@@ -24,7 +24,7 @@ fgets( <unfinished ...>
 
 Deux call a strcpy, vulnerable aux overflow.
 
-Aussi en faisant info functions et via le code decompile on voit une fonction m inutilisee qui print time et une variable, on va essayer d'appeler cette fonction.
+Aussi en faisant info functions et via le code decompile on voit une fonction m inutilisee qui print time et une variable, resultant du fichier .pass on va essayer d'appeler cette fonction.
 
 On cherche combien de caractere fait overflow le premier argument:
 
@@ -41,13 +41,13 @@ trouver puts dans la global of table :
 
 (gdb) disas puts
 Dump of assembler code for function puts@plt:
-   0x08048400 <+0>:	jmp    *0x8049928
+   0x08048400 <+0>:	jmp    *0x8049928 << 
    0x08048406 <+6>:	push   $0x28
    0x0804840b <+11>:	jmp    0x80483a0
 End of assembler dump.
 (gdb) disas 0x8049928
 Dump of assembler code for function puts@got.plt:
-   0x08049928 <+0>:	push   %es 
+   >> 0x08049928 <+0>:	push   %es 
    0x08049929 <+1>:	test   %al,(%eax,%ecx,1)
 End of assembler dump.
 

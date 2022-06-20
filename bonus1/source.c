@@ -1,19 +1,18 @@
 
-undefined4 main(undefined4 placeholder_0, char **envp)
+int main(int argc, char **argv)
 {
-    undefined4 uVar1;
-    undefined auStack60 [40];
-    int32_t iStack20;
-    
-    iStack20 = atoi(envp[1]);
-    if (iStack20 < 10) {
-        memcpy(auStack60, envp[2], iStack20 * 4);
-        if (iStack20 == 0x574f4c46) {
-            execl("/bin/sh", 0x8048580, 0);
+    char buffer [40];
+    int number;
+    int returnValue;
+    number = atoi(argv[1]);
+    if (number < 10) {
+        memcpy(buffer, argv[2], number * 4);
+        if (number == 1464814662) {
+            execl("/bin/sh", "sh", 0);
         }
-        uVar1 = 0;
+        returnValue = 0;
     } else {
-        uVar1 = 1;
+        returnValue = 1;
     }
-    return uVar1;
+    return returnValue;
 }

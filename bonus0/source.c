@@ -1,55 +1,36 @@
 
-
-// Lis l'entree standard (4096 bytes)
-// cherche occurence 10 dans la string
-// copie 20 premiers char dans dest
-void p(char *dest, char *s)
+char* p(char *dest, char *s)
 {
-    undefined *puVar1;
-    char *var_1008h;
+    char *buffer;
     
     puts(s);
-    read(0, &var_1008h, 0x1000);   // arg : int fs, void *buf, size_t N -> Reads N bytes of input indicated by buf. Fs is offset (0 = current position). Returns nb of byes read. Size here is 4096
-    puVar1 = (undefined *)strchr(&var_1008h, 10);
-    *puVar1 = 0;
-    strncpy(dest, &var_1008h, 0x14);  // 0x14 = 20
-    return;
+    read(0, &buffer, 4096);
+    *strchr(&buffer, '\n') = 0;
+    return strncpy(dest, buffer, 20);
 }
 
 
 void pp(char *dest)
 {
-    char cVar1;
-    uint32_t uVar2;
-    char *pcVar3;
-    uint8_t uVar4;
-    int32_t var_3ch;
-    int32_t var_30h;
-    int32_t var_1ch;
+    char str1[20];
+    char str2[20];
+    int len = 0;
+
+    p(str1, " - ");
+    p(str2, " - ");
+    strcpy(dest, str1);
+    len = strlen(dest);
+    dest[len] = ' ';
+    dest[len + 1] = 0;
     
-    uVar4 = 0;
-    p((char *)&var_30h, " - ");
-    p((char *)&var_1ch, " - ");
-    strcpy(dest, &var_30h);
-    uVar2 = 0xffffffff;
-    pcVar3 = dest;
-    do {
-        if (uVar2 == 0) break;
-        uVar2 = uVar2 - 1;
-        cVar1 = *pcVar3;
-        pcVar3 = pcVar3 + (uint32_t)uVar4 * -2 + 1;
-    } while (cVar1 != '\0');
-    *(undefined2 *)(dest + (~uVar2 - 1)) = *(undefined2 *)0x80486a4;
-    strcat(dest, &var_1ch);
-    return;
+    return strcat(dest,str2);
 }
 
 
-undefined4 main(void)
+int main(int argc, char **argv)
 {
-    char acStack58 [54];
-    
-    pp(acStack58);
-    puts(acStack58);
+    char buffer [42];
+    pp(buffer);
+    puts(buffer);
     return 0;
 }
