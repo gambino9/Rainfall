@@ -1,14 +1,18 @@
 
+
+// Lis l'entree standard (4096 bytes)
+// cherche occurence 10 dans la string
+// copie 20 premiers char dans dest
 void p(char *dest, char *s)
 {
     undefined *puVar1;
     char *var_1008h;
     
     puts(s);
-    read(0, &var_1008h, 0x1000);
+    read(0, &var_1008h, 0x1000);   // arg : int fs, void *buf, size_t N -> Reads N bytes of input indicated by buf. Fs is offset (0 = current position). Returns nb of byes read. Size here is 4096
     puVar1 = (undefined *)strchr(&var_1008h, 10);
     *puVar1 = 0;
-    strncpy(dest, &var_1008h, 0x14);
+    strncpy(dest, &var_1008h, 0x14);  // 0x14 = 20
     return;
 }
 
